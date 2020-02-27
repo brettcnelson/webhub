@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from './Nav';
 import Home from './Home';
-import List from './List';
+import List from './List.jsx';
 import { Switch,Route } from 'react-router-dom';
 
 const App = () => (
