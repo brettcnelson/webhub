@@ -1,55 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const path = require('path');
-const session = require('express-session');
-const cors = require('cors');
-const errorHandler = require('errorhandler');
-
+const logger = require('morgan');
 const Users = require('./models/Users');
 
 const isProd = process.env.NODE_ENV === 'production';
-
-mongoose.promise = global.Promise;
 const mongoURI = isProd ? process.env.MONGO_URI : 'mongodb://localhost/nexus';
 mongoose.connect(mongoURI,{ useNewUrlParser:true, useUnifiedTopology:true });
-mongoose.set('debug',true);
 const db = mongoose.connection;
-require('./config/passport');
 
 const app = express();
-const port = process.env.PORT || 4040;
 
-app.use(require('./routes'));
-app.use(cors());
-app.use(require('morgan')('dev'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 if (isProd) {
 	app.use(express.static('client/build'));
 }
-app.use(session({ secret:'passport-tutorial', cookie:{ maxAge:60000 }, resave:false, saveUninitialized:false }));
-if (!isProd) {
-	app.use(errorHandler);
-	app.use((req,res,err) => {
-		res.status(err.status || 500);
-		res.json({
-			errors: {
-				message:err.message,
-				error:err
-			}
-		});
-	});
-}
-app.use((req,res,err) => {
-	res.status(err.status || 500);
-	res.json({
-		errors: {
-			message:err.message,
-			error:{}
-		}
-	});
-});
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(logger('dev'));
+
+app.use('/',require('./routes'));
+
+const port = process.env.PORT || 4040;
+app.listen(port, () => console.log(`express listening on port ${port}`));
+
 
 // app.get('/api', (req, res) => {
 // 	res.json({"check":"EXPRESS /api PROXY SERVER CONNECTED"});
@@ -91,6 +64,3 @@ app.use((req,res,err) => {
 // 		res.json(result);
 // 	});
 // });
-
-
-app.listen(port, () => console.log(`express listening on port ${port}`));

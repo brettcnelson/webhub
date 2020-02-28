@@ -9,7 +9,7 @@ const List = () => {
 				{nums.map((num,i) => <li key={i}>{num}</li>)}
 			</ul>
 		</div>
-	)
+	);
 }
 
 export default List;
