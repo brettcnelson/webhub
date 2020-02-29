@@ -1,24 +1,28 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const logger = require('morgan');
-const Users = require('./models/Users');
+const path = require('path');
 
 const isProd = process.env.NODE_ENV === 'production';
-const mongoURI = isProd ? process.env.MONGO_URI : 'mongodb://localhost/nexus';
-mongoose.connect(mongoURI,{ useNewUrlParser:true, useUnifiedTopology:true });
-const db = mongoose.connection;
+if (!isProd) {
+	require('dotenv').config();
+}
+
+const mongoURI = process.env.MONGO_URI;
+mongoose.connect(mongoURI,{ useNewUrlParser:true, useUnifiedTopology:true },() => {
+	console.log('mongoose connected');
+});
 
 const app = express();
 
-if (isProd) {
-	app.use(express.static('client/build'));
-}
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(logger('dev'));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-app.use('/',require('./routes'));
+app.use('/api',require('./api'));
+
+app.use(express.static(path.join(__dirname,'client/build')));
+app.get('/*', (req,res) => {
+	res.sendFile(path.join(__dirname,'client/build','index.html'));
+});
 
 const port = process.env.PORT || 4040;
 app.listen(port, () => console.log(`express listening on port ${port}`));

@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
 
 const UsersSchema = new mongoose.Schema({
-	email: String,
-	hash: String,
-	salt: String,
+	email: String
 });
 
-module.exports = mongoose.model('Users', UsersSchema);
+module.exports = mongoose.model('User', UsersSchema);
 
 // [Users]
 // 	.id 
@@ -33,6 +31,8 @@ module.exports = mongoose.model('Users', UsersSchema);
 // 		[followers:id]
 // [Posts]
 // 	.id
+//	'type(post/reply/chain)'
+// 	userID
 // 	.parentID
 // 	timestamp
 // 	!pendingEdit

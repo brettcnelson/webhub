@@ -3,25 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "concurrently \"cd client/ && npm start\" \"nodemon server.js\"",
+    "start": "concurrently \"cd client/ && npm start\" \"nodemon server/server.js\"",
     "setup": "cd client/ && npm install && cd .. && npm install && npm start",
     "heroku-postbuild": "cd client/ && npm install --only=dev && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^4.0.0",
-    "body-parser": "^1.18.2",
-    "connect-flash": "^0.1.1",
     "express": "^4.16.3",
-    "express-session": "^1.17.0",
     "mongoose": "^5.0.10",
-    "morgan": "^1.9.1",
-    "passport": "^0.4.1",
-    "passport-local": "^1.0.0"
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.2"
   }
 }
