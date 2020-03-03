@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './Nav.scss';
 
 export default () => (
-	<nav className="Nav">
-		<div className="nav-link"><Link to='/'>Search</Link></div>
-		<div className="nav-link"><Link to='/subscriptions'>Subscriptions</Link></div>
-	</nav>
+	<header>
+		<nav className="Nav">
+			<NavLink exact to='/' className="nav-link" activeClassName="active-nav-link">Home</NavLink>
+			<NavLink to='/subscriptions' className="nav-link" activeClassName="active-nav-link">Subscriptions</NavLink>
+		</nav>
+	</header>
 );

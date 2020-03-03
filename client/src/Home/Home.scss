@@ -1,3 +1,9 @@
 .Home {
-
+  text-align:center;
+  padding:1rem 0;
+  .users-con {
+    display:grid;
+    padding:1rem;
+    grid-gap:.5rem;
+  }
 }
