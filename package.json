@@ -10,7 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "diff": "^4.0.2",
     "express": "^4.16.3",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.0.10",
     "path": "^0.12.7"
   },

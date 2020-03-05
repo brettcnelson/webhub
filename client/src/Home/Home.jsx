@@ -6,6 +6,7 @@ import User from '../User/User.jsx';
 
 const Home = ({ users, getUsers, addUser, updateUser, deleteUser }) => {
   const [inputVal,setInputVal] = useState('');
+  // const [textVal,setTextVal] = useState('');
 
   const onInputChange = ({ target:{ value } }) => {
     setInputVal(value);

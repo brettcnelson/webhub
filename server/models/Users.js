@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
 
 const UsersSchema = new mongoose.Schema({
-	name: String,
+	email: {
+		type: String,
+		required: true
+	},
+	password: {
+		type: String,
+		required: true
+	},
 	date: {
 		type: Date,
 		default: Date.now

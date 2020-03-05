@@ -12,7 +12,7 @@ export default ({ user, handleUpdateUser, handleDeleteUser }) => {
   return (
     <div className="user">
       <div className="user-con">
-        {['_id', 'name', 'date'].map(key => (
+        {['_id', 'email', 'password', 'date'].map(key => (
           <React.Fragment key={key}>
             <span className="field key">{key}:</span><span className="field val">{user[key]}</span>
           </React.Fragment>
