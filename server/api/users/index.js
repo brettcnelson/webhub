@@ -83,41 +83,41 @@ router.get('/auth', auth, (req, res) => {
   return res.status(200).json({ msg: 'user token verified' });
 });
 
-router.get('/', (req,res) => {
-  User.find((err,users) => {
-    if (err) {
-      throw err;
-    }
-    res.json(users);
-  });
-});
+// router.get('/', (req,res) => {
+//   User.find((err,users) => {
+//     if (err) {
+//       throw err;
+//     }
+//     res.json(users);
+//   });
+// });
 
-router.post('/', (req,res) => {
-  const user = req.body;
-  User.create(user, (err,user) => {
-    if (err) {
-      throw err;
-    }
-    res.json(user);
-  });
-});
+// router.post('/', (req,res) => {
+//   const user = req.body;
+//   User.create(user, (err,user) => {
+//     if (err) {
+//       throw err;
+//     }
+//     res.json(user);
+//   });
+// });
 
-router.put('/:_id', (req,res) => {
-  User.findByIdAndUpdate(req.params._id, req.body, {new:true}, (err,user) => {
-    if (err) {
-      throw err;
-    }
-    res.json(user);
-  });
-});
+// router.put('/:_id', (req,res) => {
+//   User.findByIdAndUpdate(req.params._id, req.body, {new:true}, (err,user) => {
+//     if (err) {
+//       throw err;
+//     }
+//     res.json(user);
+//   });
+// });
 
-router.delete('/:_id', (req,res) => {
-  User.findByIdAndRemove(req.params._id, (err,result) => {
-    if (err) {
-      throw err;
-    }
-    res.json(result);
-  });
-});
+// router.delete('/:_id', (req,res) => {
+//   User.findByIdAndRemove(req.params._id, (err,result) => {
+//     if (err) {
+//       throw err;
+//     }
+//     res.json(result);
+//   });
+// });
 
 module.exports = router;

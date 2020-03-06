@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import users from './users';
+import loading from './loading';
+import isAuthed from './isAuthed';
 
 export default combineReducers({ 
-  users
+  loading,
+  isAuthed
 });

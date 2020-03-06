@@ -1,11 +1,15 @@
 import { 
-  GET_USERS,
-  ADD_USER,
-  UPDATE_USER,
-  DELETE_USER
+  LOADING,
+  LOADED,
+  IS_AUTHED,
+  IS_NOT_AUTHED,
+  CHECKING_AUTH
 } from './actionTypes';
 
-export const getUsers = (users) => ({type:GET_USERS, users});
-export const addUser = (user) => ({type:ADD_USER, user});
-export const updateUser = (user) => ({type:UPDATE_USER, user});
-export const deleteUser = (user) => ({type:DELETE_USER, user});
+export const loading = () => ({type:LOADING});
+export const loaded = () => ({type:LOADED});
+export const checkingAuth = () => ({type:CHECKING_AUTH});
+export const authed = () => ({type:IS_AUTHED});
+export const notAuthed = () => ({type:IS_NOT_AUTHED});
+
+// export const getUsers = (users) => ({type:GET_USERS, users});

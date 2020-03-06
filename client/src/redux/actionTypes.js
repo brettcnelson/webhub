@@ -1,5 +1,6 @@
-export const GET_USERS = 'GET_USERS';
-export const ADD_USER = 'ADD_USER';
-export const UPDATE_USER = 'UPDATE_USER';
-export const DELETE_USER = 'DELETE_USER';
+export const LOADING = 'LOADING';
+export const LOADED = 'LOADED';
+export const IS_AUTHED = 'IS_AUTHED';
+export const IS_NOT_AUTHED = 'IS_NOT_AUTHED';
+export const CHECKING_AUTH = 'CHECKING_AUTH';
 

@@ -12,6 +12,26 @@ const UsersSchema = new mongoose.Schema({
 	date: {
 		type: Date,
 		default: Date.now
+	},
+	profile: {
+		type: Map,
+		of: String
+	},
+	postChannels: {
+		type: Map,
+		of: String
+	},
+	feedChannels: {
+		type: Map,
+		of: String
+	},
+	feeds: {
+		type: Map,
+		of: String
+	},
+	alerts: {
+		type: Map,
+		of: String
 	}
 });
 
