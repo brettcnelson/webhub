@@ -30,9 +30,7 @@ router.post('/login', (req,res) => {
           }
           res.json({
             token,
-            user: {
-              id: user._id
-            }
+            userid: user._id
           });
         }
       );
@@ -65,11 +63,9 @@ router.post('/register', (req,res) => {
               if (err) {
                 throw err;
               }
-              res.json({
+              return res.status(200).json({
                 token,
-                user: {
-                  id: user._id
-                }
+                userid: user._id
               });
             }
           );
@@ -80,7 +76,7 @@ router.post('/register', (req,res) => {
 });
 
 router.get('/auth', auth, (req, res) => {
-  return res.status(200).json({ msg: 'user token verified' });
+  return res.status(200).json({ msg: 'user token verified', token: req.token });
 });
 
 // router.get('/', (req,res) => {
