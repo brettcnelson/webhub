@@ -1,17 +1,19 @@
 import { 
-  LOADING,
-  LOADED,
+  REGISTER,
+  LOGIN,
+  NONE,
   IS_AUTHED,
   IS_NOT_AUTHED,
-  CHECKING_AUTH,
-  FLUSH_USER
+  FLUSH_USER,
+  UPDATE_USER_DATA
 } from './actionTypes';
 
-export const loading = () => ({type:LOADING});
-export const loaded = () => ({type:LOADED});
-export const checkingAuth = () => ({type:CHECKING_AUTH});
 export const authed = () => ({type:IS_AUTHED});
 export const notAuthed = () => ({type:IS_NOT_AUTHED});
 export const flushUser = () => ({type:FLUSH_USER});
+export const displayRegister = () => ({type:REGISTER});
+export const displayLogin = () => ({type:LOGIN});
+export const displayNone = () => ({type:NONE});
+export const updateUserData = (data) => ({ type:UPDATE_USER_DATA, data });
 
 // export const getUsers = (users) => ({type:GET_USERS, users});

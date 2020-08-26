@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { authed, notAuthed } from '../redux/actions';
+import Login from '../Login/Login.jsx';
+import Register from '../Register/Register.jsx';
 import './Home.scss';
-import checkAuth from '../checkAuth';
 
-const Home = ({ isAuthed, authed, notAuthed }) => {
-  checkAuth()
-  .then(res => {
-    if (res) {
-      authed();
-    }
-    else {
-      notAuthed();
-    }
-  });
-
+const Home = ({ userData, isAuthed }) => {
   return (
+    isAuthed ? (
+      <div>
+        {userData.handle}
+        {userData._id}
+      </div>
+    ) :
     <div>
-      <div>home</div>
-      <div><span>{``}</span></div>
-      <div>{isAuthed ? 'logged in' : 'logged out'}</div>
+      <Login />
+      <Register />
     </div>
   );
 }
 
 export default connect(
-  ({ isAuthed }) => ({ isAuthed }),
-  { authed, notAuthed }
+  ({ user: { userData }, user: { isAuthed } }) => ({ userData, isAuthed })
 )(Home);

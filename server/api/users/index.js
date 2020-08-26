@@ -4,17 +4,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../auth/auth');
 const User = require('../../models/Users');
+const OneDay = require('../../models/OneDay');
 
 const router = express.Router();
 
 router.post('/login', (req,res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({msg:'email and password required for login'});
+  const { handle, password } = req.body;
+  if (!handle || !password) {
+    return res.status(400).json({msg:'handle and password required for login'});
   }
-  User.findOne({ email }, (err, user) => {
+  User.findOne({ handle }, (err, user) => {
     if (!user) {
-      return res.status(400).json({msg:'no user with that email in db'});
+      return res.status(400).json({msg:'no user with that handle in db'});
     }
     bcrypt.compare(password, user.password)
     .then(isMatch => {
@@ -28,10 +29,7 @@ router.post('/login', (req,res) => {
           if (err) {
             throw err;
           }
-          res.json({
-            token,
-            userid: user._id
-          });
+          res.json({ ...data , token });
         }
       );
     });
@@ -39,37 +37,39 @@ router.post('/login', (req,res) => {
 });
 
 router.post('/register', (req,res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({msg:'email and password required for registration'});
+  const { handle, password } = req.body;
+  if (!handle || !password) {
+    return res.status(400).json({msg:'handle and password required for registration'});
   }
-  User.findOne({ email }, (err, user) => {
+  User.findOne({ handle }, (err, user) => {
     if (user) {
-      return res.status(400).json({msg:'user account with that email already exists'});
+      return res.status(400).json({msg:'user account with that handle already exists'});
     }
     bcrypt.genSalt(10, (err,salt) => {
       bcrypt.hash(password, salt, (err,hash) => {
         if (err) {
           throw err;
         }
-        User.create({ email , password: hash}, (err,user) => {
+        OneDay.create({ handle }, (err,oneDay) => {
           if (err) {
             throw err;
           }
-          jwt.sign(
-            {id: user._id},
-            process.env.JWT_SECRET,
-            (err,token) => {
-              if (err) {
-                throw err;
-              }
-              return res.status(200).json({
-                token,
-                userid: user._id
-              });
+          User.create({ handle , password: hash, oneDay: oneDay._id }, (err,user) => {
+            if (err) {
+              throw err;
             }
-          );
-        });
+            jwt.sign(
+              {id: user._id},
+              process.env.JWT_SECRET,
+              (err,token) => {
+                if (err) {
+                  throw err;
+                }
+                return res.status(200).json({ ...data, token });
+              }
+            );
+          });
+        })
       });
     });
   });

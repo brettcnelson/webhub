@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const UsersSchema = new mongoose.Schema({
-	email: {
+	date: {
+		type: Date,
+		default: Date.now
+	},
+	handle: {
 		type: String,
 		required: true
 	},
@@ -9,29 +13,22 @@ const UsersSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	date: {
-		type: Date,
-		default: Date.now
-	},
 	profile: {
 		type: Map,
-		of: String
+		default: {}
 	},
-	postChannels: {
-		type: Map,
-		of: String
+	oneDay: String,
+	channels: {
+		type:Map,
+		default:{}
 	},
-	feedChannels: {
+	subscriptions: {
 		type: Map,
-		of: String
-	},
-	feeds: {
-		type: Map,
-		of: String
-	},
-	alerts: {
-		type: Map,
-		of: String
+		default: {
+			oneDays:{},
+			channels: {},
+			users: {}
+		}
 	}
 });
 

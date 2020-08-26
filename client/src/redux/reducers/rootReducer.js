@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import loading from './loading';
 import user from './user';
+import displayCover from './displayCover';
 
 export default combineReducers({ 
-  loading,
+  displayCover,
   user
 });

@@ -1,68 +1,44 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { displayNone, authed, updateUserData } from '../redux/actions';
 import './Login.scss';
 
-const register = (email,password) => {
-  fetch('/api/users/register', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password })
-  })
-  .then(res => res.json())
-  .then(res => {
-    if (res.token) {
-      localStorage.setItem('token', res.token);
-      // set userid in redux
-    }
-    else {
-      // show err to register
-      alert(res.msg);
-    } 
-  });
-}
-
-const login = (email,password) => {
-  // console.log(email,password)
-  fetch('/api/users/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password })
-  })
-  .then(res => res.json())
-  .then(res => {
-    if (res.token) {
-      localStorage.setItem('token', res.token);
-      // set userid in redux
-    }
-    else {
-      // show err to register
-      alert(res.msg);
-    } 
-  });
-}
-
-export default () => {
-  const [ loginEmail, setLoginEmail ] = useState('');
+const Login =  ({ displayNone, authed, updateUserData }) => {
+  const login = ( handle, password ) => {
+    fetch('/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ handle, password })
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.token) {
+        console.log(res);
+        localStorage.setItem('token', res.token);
+        displayNone();
+        authed();
+        updateUserData(res);
+      }
+      else {
+        alert(res.msg);
+      } 
+    });
+  }
+  const [ loginhandle, setLoginhandle ] = useState('');
   const [ loginPassword, setLoginPassword ] = useState('');
-  const [ registerEmail, setRegisterEmail ] = useState('');
-  const [ registerPassword, setRegisterPassword ] = useState('');
   return (
-    <div className="login">
       <div>
         <div>login</div>
-        <input type="text" placeholder="email" onChange={(e) => setLoginEmail(e.target.value)} />
+        <input type="text" placeholder="handle" autoFocus={true} onChange={(e) => setLoginhandle(e.target.value)} />
         <input type="text" placeholder="password" onChange={(e) => setLoginPassword(e.target.value)} />
-        <button onClick={() => login(loginEmail,loginPassword)}>login</button>
+        <button onClick={() => login(loginhandle,loginPassword)}>login</button>
       </div>
-      <div>
-        <div>register</div>
-        <input type="text" placeholder="email" onChange={(e) => setRegisterEmail(e.target.value)} />
-        <input type="text" placeholder="password" onChange={(e) => setRegisterPassword(e.target.value)} />
-        <button onClick={() => register(registerEmail,registerPassword)}>register</button>
-      </div>
-    </div>
   );
 }
+
+export default connect(
+  null,
+  { displayNone, authed, updateUserData }
+)(Login);

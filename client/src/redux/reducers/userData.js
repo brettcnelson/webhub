@@ -1,22 +1,15 @@
 import { 
-  FLUSH_USER
+  FLUSH_USER,
+  UPDATE_USER_DATA
 } from '../actionTypes';
 
-const initialState = {
-  following: {
-    oneDay: {},
-    users: {},
-    channels: {}
-  },
-  oneDay: [],
-  feed: [],
-  recs: []
-};
-
-export default (state=initialState,action) => {
+export default (state={},action) => {
   switch(action.type) {
     case FLUSH_USER: {
-      return initialState;
+      return {};
+    }
+    case UPDATE_USER_DATA: {
+      return { ...state, ...action.data };
     }
     default:
       return state;
