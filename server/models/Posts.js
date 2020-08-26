@@ -2,21 +2,15 @@ const mongoose = require('mongoose');
 
 const PostsSchema = new mongoose.Schema({
   uid: String,
-  channels: {
-    type: Map,
-    of: String
-  },
-  type: String,
-  dateCreated: {
+  date: {
     type: Date,
     default: Date.now
   },
+  edited: {
+    type: Date,
+    default: null
+  },
   body: String,
-  replies: [String],
-  deleted: {
-    type: Boolean,
-    default: false
-  }
 });
 
 module.exports = mongoose.model('Post', PostsSchema);

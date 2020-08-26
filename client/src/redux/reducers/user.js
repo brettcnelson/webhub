@@ -15,7 +15,7 @@ const initialState = {
 export default (state=initialState,action) => {
   switch(action.type) {
     case IS_AUTHED: {
-      return { ...state, isAuthed: true };
+      return { ...state, isAuthed: true, userData: userData(state.userData,action) };
     }
     case IS_NOT_AUTHED: {
       return { ...state, isAuthed: false };

@@ -5,16 +5,18 @@ import Register from '../Register/Register.jsx';
 import './Home.scss';
 
 const Home = ({ userData, isAuthed }) => {
-  return (
-    isAuthed ? (
+  if (!isAuthed) {
+    return ( 
       <div>
-        {userData.handle}
-        {userData._id}
+        <Login />
+        <Register />
       </div>
-    ) :
+    );
+  }
+  return (
     <div>
-      <Login />
-      <Register />
+      {userData.handle}
+      {userData._id}
     </div>
   );
 }

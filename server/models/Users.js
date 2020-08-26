@@ -17,18 +17,25 @@ const UsersSchema = new mongoose.Schema({
 		type: Map,
 		default: {}
 	},
-	oneDay: String,
-	channels: {
-		type:Map,
-		default:{}
-	},
-	subscriptions: {
+	subs: {
 		type: Map,
-		default: {
-			oneDays:{},
-			channels: {},
-			users: {}
-		}
+		default: {}
+	},
+	alertSubs: {
+		type: Map,
+		default: {}
+	},
+	lastPostDate: {
+		type:Date,
+		default:null
+	},
+	recPoints: {
+		type:Number,
+		default:400
+	},
+	lastRecDate: {
+		type:Date,
+		default:null
 	}
 });
 

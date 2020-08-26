@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../auth/auth');
 const User = require('../../models/Users');
-const OneDay = require('../../models/OneDay');
 
 const router = express.Router();
 
@@ -29,7 +28,7 @@ router.post('/login', (req,res) => {
           if (err) {
             throw err;
           }
-          res.json({ ...data , token });
+          res.json({ ...user._doc , token });
         }
       );
     });
@@ -50,33 +49,33 @@ router.post('/register', (req,res) => {
         if (err) {
           throw err;
         }
-        OneDay.create({ handle }, (err,oneDay) => {
+        User.create({ handle , password: hash }, (err,user) => {
           if (err) {
             throw err;
           }
-          User.create({ handle , password: hash, oneDay: oneDay._id }, (err,user) => {
-            if (err) {
-              throw err;
-            }
-            jwt.sign(
-              {id: user._id},
-              process.env.JWT_SECRET,
-              (err,token) => {
-                if (err) {
-                  throw err;
-                }
-                return res.status(200).json({ ...data, token });
+          jwt.sign(
+            {id: user._id},
+            process.env.JWT_SECRET,
+            (err,token) => {
+              if (err) {
+                throw err;
               }
-            );
-          });
-        })
+              return res.status(200).json({ ...user._doc, token });
+            }
+          );
+        });
       });
     });
   });
 });
 
 router.get('/auth', auth, (req, res) => {
-  return res.status(200).json({ msg: 'user token verified', token: req.token });
+  User.findById(req.user.id, (err,user) => {
+    if (err) {
+      throw err;
+    }
+    return res.status(200).json({ ...user._doc });
+  });
 });
 
 // router.get('/', (req,res) => {

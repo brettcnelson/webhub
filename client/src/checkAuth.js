@@ -10,7 +10,7 @@ export default () => {
   })
   .then(res => {
     if (res.status === 200) {
-      return true;
+      return res.json();
     }
     return false;
   });

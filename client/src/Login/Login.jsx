@@ -15,7 +15,6 @@ const Login =  ({ displayNone, authed, updateUserData }) => {
     .then(res => res.json())
     .then(res => {
       if (res.token) {
-        console.log(res);
         localStorage.setItem('token', res.token);
         displayNone();
         authed();

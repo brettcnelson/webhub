@@ -11,9 +11,20 @@ const Nav = ({ isAuthed, displayLogin, displayRegister, notAuthed, flushUser }) 
 		notAuthed();
 	}
 
+	const copyLink = () => {
+		navigator.clipboard.readText()
+		.then(text => {
+			if (window.confirm(`add link: ${text}?`)) {
+				alert('sdad');
+			}
+		})
+	}
+
 	return (
 		<header>
 			<nav className="Nav">
+				<button onClick={copyLink}>paste link</button>
+				<button>new post</button>
 				<NavLink to='/' className="nav-link" activeClassName="active-nav-link">Home</NavLink>
 				<NavLink to='/search' className="nav-link" activeClassName="active-nav-link">Search</NavLink>
 				<div>

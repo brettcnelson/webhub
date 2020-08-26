@@ -1,6 +1,7 @@
 import { 
   FLUSH_USER,
-  UPDATE_USER_DATA
+  UPDATE_USER_DATA,
+  IS_AUTHED
 } from '../actionTypes';
 
 export default (state={},action) => {
@@ -8,7 +9,8 @@ export default (state={},action) => {
     case FLUSH_USER: {
       return {};
     }
-    case UPDATE_USER_DATA: {
+    case UPDATE_USER_DATA: 
+    case IS_AUTHED: {
       return { ...state, ...action.data };
     }
     default:

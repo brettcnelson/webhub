@@ -14,9 +14,9 @@ const Register =  ({ displayNone, authed, updateUserData }) => {
     })
     .then(res => res.json())
     .then(res => {
+      console.log(res);
       if (res.token) {
         localStorage.setItem('token', res.token);
-        console.log(res);
         displayNone();
         authed();
         updateUserData(res);
