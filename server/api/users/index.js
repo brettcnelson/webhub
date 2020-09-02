@@ -78,6 +78,15 @@ router.get('/auth', auth, (req, res) => {
   });
 });
 
+router.get('/allUsers', (req,res) => {
+  User.find((err,users) => {
+    if (err) {
+      throw err;
+    }
+    res.json(users);
+  })
+});
+
 // router.get('/', (req,res) => {
 //   User.find((err,users) => {
 //     if (err) {

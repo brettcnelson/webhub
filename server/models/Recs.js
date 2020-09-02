@@ -9,7 +9,8 @@ const RecsSchema = new mongoose.Schema({
   points: {
     type:Number,
     required:true
-  }
+  },
+  message: String
 });
 
 module.exports = mongoose.model('Rec', RecsSchema);

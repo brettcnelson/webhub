@@ -5,10 +5,10 @@ const LinksSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
-	uid: {
-		type: String,
-		required: true
-  },
+	// uid: {
+	// 	type: String,
+	// 	required: true
+  // },
 	link: {
 		type:String,
 		required:true

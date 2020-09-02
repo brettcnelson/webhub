@@ -1,4 +1,4 @@
-export default () => {
+export const checkAuth = () => {
   const token =  localStorage.getItem('token');
   if (!token) {
     return Promise.resolve(false);
@@ -14,4 +14,8 @@ export default () => {
     }
     return false;
   });
+}
+
+export const getAllUsers = () => {
+  return fetch('api/users/allUsers');
 }

@@ -6,8 +6,8 @@ import Home from '../Home/Home.jsx';
 import Search from '../Search/Search.jsx';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { authed, notAuthed, updateUserData } from '../redux/actions';
-import checkAuth from '../checkAuth';
+import { authed, notAuthed } from '../redux/actions';
+import { checkAuth } from '../API';
 
 const App = ({ isAuthed, authed, notAuthed, updateUserData }) => {
   if (isAuthed === -1) {
@@ -38,5 +38,5 @@ const App = ({ isAuthed, authed, notAuthed, updateUserData }) => {
 
 export default connect(
   ({ user: { isAuthed } }) => ({ isAuthed }),
-  { authed, notAuthed, updateUserData }
+  { authed, notAuthed }
 )(App);

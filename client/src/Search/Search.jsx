@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Loading from '../Loading/Loading.jsx';
+import { getAllUsers } from '../API';
 
-const nums = [1,2,3,4,5,6,7,8,9];
-
-export default () => (
-	<div>
-		list
-		<ul>
-			{nums.map((num,i) => <li key={i}>{num}</li>)}
-		</ul>
-	</div>
-);
+export default () => {
+	const [data, setData] = useState(null);
+	if (!data) {
+		getAllUsers().then(res => res.json()).then(users => {
+			setData(users);
+		})
+	}
+	return data ?
+		(<pre><code>{JSON.stringify(data,null,2)}</code></pre>) :
+		(<Loading />)
+}

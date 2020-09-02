@@ -3,7 +3,12 @@ import { connect } from 'react-redux';
 import { displayNone, authed, updateUserData } from '../redux/actions';
 import './Register.scss';
 
-const Register =  ({ displayNone, authed, updateUserData }) => {
+const Register =  ({ displayNone, authed }) => {
+  const checkRegisterChar = (e) => {
+    if (e.target.value[e.target.value.length-1] !== ' ') {
+      setRegisterhandle(e.target.value);
+    }
+  }
   const register = ( handle, password ) => {
     fetch('/api/users/register', {
       method: 'POST',
@@ -18,8 +23,7 @@ const Register =  ({ displayNone, authed, updateUserData }) => {
       if (res.token) {
         localStorage.setItem('token', res.token);
         displayNone();
-        authed();
-        updateUserData(res);
+        authed(res);
       }
       else {
         // show err to register
@@ -33,8 +37,8 @@ const Register =  ({ displayNone, authed, updateUserData }) => {
     <div className="register">
       <div style={{color:'gray'}}>do not type your real handle, just type a name</div>
       <div>register</div>
-      <input type="text" autoFocus={true} placeholder="handle" onChange={(e) => setRegisterhandle(e.target.value)} />
-      <input type="text" placeholder="password" onChange={(e) => setRegisterPassword(e.target.value)} />
+      <input type="text" autoFocus={true} placeholder="handle" value={registerhandle} onChange={checkRegisterChar} />
+      <input type="text" placeholder="password" value={registerPassword} onChange={(e) => setRegisterPassword(e.target.value)} />
       <button onClick={() => register(registerhandle,registerPassword)}>register</button>
     </div>
   );
@@ -42,5 +46,5 @@ const Register =  ({ displayNone, authed, updateUserData }) => {
 
 export default connect(
   null,
-  { displayNone, authed, updateUserData }
+  { displayNone, authed }
 )(Register);
