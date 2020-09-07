@@ -12,10 +12,11 @@ export const checkAuth = () => {
     if (res.status === 200) {
       return res.json();
     }
+    localStorage.removeItem('token');
     return false;
   });
 }
 
 export const getAllUsers = () => {
-  return fetch('api/users/allUsers');
+  return fetch('/api/users/allUsers').then(res => res.json());
 }

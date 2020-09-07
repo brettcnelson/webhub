@@ -41,6 +41,9 @@ router.post('/register', (req,res) => {
     return res.status(400).json({msg:'handle and password required for registration'});
   }
   User.findOne({ handle }, (err, user) => {
+    if (err) {
+      throw err;
+    }
     if (user) {
       return res.status(400).json({msg:'user account with that handle already exists'});
     }
@@ -84,6 +87,15 @@ router.get('/allUsers', (req,res) => {
       throw err;
     }
     res.json(users);
+  })
+});
+
+router.post('/handle', ({ body: { handle }},res) => {
+  User.findOne({ handle }, (err,user) => {
+    if (err) {
+      throw err;
+    }
+    res.json({ handle: !user });
   })
 });
 

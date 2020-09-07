@@ -31,11 +31,11 @@ const Nav = ({ isAuthed, displayLogin, displayRegister, notAuthed, flushUser }) 
 	return (
 		<header>
 			<nav className="Nav">
-				<div className="nav-link"><img onClick={copyLink} className="navBtn" src={`${process.env.PUBLIC_URL}/link.png`} alt=""/></div>
-				<div><button>new post</button></div>
-				<NavLink to='/' className="nav-link" activeClassName="active-nav-link">Home</NavLink>
+				<NavLink exact to='/' className="nav-link" activeClassName="active-nav-link">Home</NavLink>
 				<NavLink to='/search' className="nav-link" activeClassName="active-nav-link">Search</NavLink>
-				<div>
+				<div className="nav-link"><img onClick={copyLink} className="navBtn" src={`${process.env.PUBLIC_URL}/link.png`} alt="copy link"/></div>
+				<div className="nav-link"><button>new post</button></div>
+				<div className="nav-link">
 					{isAuthed ?
 						(<button onClick={logout}>logout</button>) :
 						(<><button onClick={displayLogin}>login</button><button onClick={displayRegister}>register</button></>)

@@ -5,7 +5,7 @@ import { getAllUsers } from '../API';
 export default () => {
 	const [data, setData] = useState(null);
 	if (!data) {
-		getAllUsers().then(res => res.json()).then(users => {
+		getAllUsers().then(users => {
 			setData(users);
 		})
 	}

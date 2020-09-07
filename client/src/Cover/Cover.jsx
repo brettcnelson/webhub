@@ -12,8 +12,8 @@ const Cover =  ({ displayCover, displayNone }) => {
   return (
     <div className="cover">
       <div className="blackDisplay">
-        <button className="closeDisplay" onClick={displayNone}>X</button>
         { displayCover === 'LOGIN' ? <Login /> : <Register /> }
+        <button className="closeDisplay" onClick={displayNone}>close</button>
       </div>
     </div>
   );

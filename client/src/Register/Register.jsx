@@ -4,9 +4,27 @@ import { displayNone, authed, updateUserData } from '../redux/actions';
 import './Register.scss';
 
 const Register =  ({ displayNone, authed }) => {
+  const [ registerhandle, setRegisterhandle ] = useState('');
+  const [ registerPassword, setRegisterPassword ] = useState('');
+  const [ handleAvailable, setHandleAvailable ] = useState('');
   const checkRegisterChar = (e) => {
-    if (e.target.value[e.target.value.length-1] !== ' ') {
-      setRegisterhandle(e.target.value);
+    const val = e.target.value;
+    if (val[val.length-1] !== ' ') {
+      setRegisterhandle(val);
+      if (val.length) {
+        fetch('/api/users/handle', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ handle: val })
+        })
+        .then(res => res.json())
+        .then(({handle}) => setHandleAvailable(handle));
+      }
+      else {
+        setHandleAvailable('');
+      }
     }
   }
   const register = ( handle, password ) => {
@@ -31,15 +49,16 @@ const Register =  ({ displayNone, authed }) => {
       } 
     });
   }
-  const [ registerhandle, setRegisterhandle ] = useState('');
-  const [ registerPassword, setRegisterPassword ] = useState('');
   return (
     <div className="register">
-      <div style={{color:'gray'}}>do not type your real handle, just type a name</div>
       <div>register</div>
       <input type="text" autoFocus={true} placeholder="handle" value={registerhandle} onChange={checkRegisterChar} />
       <input type="text" placeholder="password" value={registerPassword} onChange={(e) => setRegisterPassword(e.target.value)} />
-      <button onClick={() => register(registerhandle,registerPassword)}>register</button>
+      {handleAvailable && registerPassword ? 
+        <button onClick={() => register(registerhandle,registerPassword)}>register</button> :
+        null
+      }
+      <div>{!registerhandle ? null : `@${registerhandle} ${handleAvailable ? 'is' : 'isn\'t'} available`}</div>
     </div>
   );
 }

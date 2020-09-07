@@ -4,6 +4,8 @@ import { displayNone, authed } from '../redux/actions';
 import './Login.scss';
 
 const Login =  ({ displayNone, authed }) => {
+  const [ loginhandle, setLoginhandle ] = useState('');
+  const [ loginPassword, setLoginPassword ] = useState('');
   const login = ( handle, password ) => {
     fetch('/api/users/login', {
       method: 'POST',
@@ -25,14 +27,15 @@ const Login =  ({ displayNone, authed }) => {
     })
     .catch(err => console.err(err));
   }
-  const [ loginhandle, setLoginhandle ] = useState('');
-  const [ loginPassword, setLoginPassword ] = useState('');
   return (
       <div>
         <div>login</div>
         <input type="text" placeholder="handle" autoFocus={true} value={loginhandle} onChange={(e) => setLoginhandle(e.target.value)} />
         <input type="text" placeholder="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
-        <button onClick={() => login(loginhandle,loginPassword)}>login</button>
+        {loginhandle && loginPassword ?
+          (<button onClick={() => login(loginhandle,loginPassword)}>login</button>) :
+          null
+        }
       </div>
   );
 }

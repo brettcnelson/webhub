@@ -8,8 +8,8 @@ const Home = ({ userData, isAuthed }) => {
   if (!isAuthed) {
     return ( 
       <div>
-        <Login />
         <Register />
+        <Login />
       </div>
     );
   }
