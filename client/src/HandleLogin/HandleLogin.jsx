@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import { authed } from '../redux/actions';
@@ -6,7 +6,14 @@ import swal from 'sweetalert';
 
 const HandleLogin =  ({ authed }) => {
   const [ redirect, setRedirect ] = useState(false);
-  (function() {
+  useEffect(() => {
+    login();
+  },[]);
+  return redirect ? 
+    <Redirect to='/' /> :
+    <div>logging in...</div>;
+  
+  function login() {
     const token = localStorage.getItem('tempToken');
     fetch('/api/users/login', {
       method: 'POST',
@@ -30,10 +37,7 @@ const HandleLogin =  ({ authed }) => {
       } 
     })
     .catch(err => console.error(err));
-  }());
-  return redirect ? 
-    <Redirect to='/' /> :
-    <div>logging in...</div>;
+  }
 }
 
 export default connect(

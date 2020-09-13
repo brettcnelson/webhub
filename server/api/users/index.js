@@ -24,10 +24,7 @@ router.post('/login-request', (req,res) => {
       const link = `/${user ? 'login' : 'register'}/${login._id}`;
       // TD: email the link and remove it from the responses below
       const token = jwt.sign(
-        {
-          id: login._id,
-          email
-        },
+        { id: login._id, email },
         process.env.JWT_SECRET
       );
       return user ? 
@@ -42,28 +39,30 @@ router.post('/login', (req,res) => {
   if (!token) {
     return res.status(401).json({ msg: 'no token at server login auth check'});
   }
-  const { id, email } = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
-  Login.findById(id, (err,link) => {
+  jwt.verify(token.split(' ')[1], process.env.JWT_SECRET, (err, { id, email }) => {
     if (err) {
-      return res.status(400).json({ msg: 'error fetching login link' });
+      return res.status(400).json({ msg: 'invalid token at login' });
     }
-    if (!link || id != link._id) {
-      return res.status(401).json({ msg: 'invalid login link' });
-    }
-    User.findOne({ email }, (err,user) => {
+    Login.findById(id, (err,link) => {
       if (err) {
-        throw err;
+        return res.status(400).json({ msg: 'error fetching login link' });
       }
-      if (!user) {
-        return res.status(400).json({ msg: 'this email doesn\'t have an account' });
+      if (!link || id != link._id) {
+        return res.status(401).json({ msg: 'invalid login link' });
       }
-      const token = jwt.sign(
-        {
-          id: user._id
-        },
-        process.env.JWT_SECRET
-      );
-      res.status(200).json({ token, uid: user._id });
+      User.findOne({ email }, (err,user) => {
+        if (err) {
+          throw err;
+        }
+        if (!user) {
+          return res.status(400).json({ msg: 'this email doesn\'t have an account' });
+        }
+        const token = jwt.sign(
+          { id: user._id },
+          process.env.JWT_SECRET
+        );
+        res.status(200).json({ token, uid: user._id });
+      });
     });
   });
 });
@@ -102,9 +101,7 @@ router.post('/register', (req,res) => {
               throw err;
             }
             const token = jwt.sign(
-              {
-                id: user._id
-              },
+              { id: user._id },
               process.env.JWT_SECRET
               );
               res.status(200).json({ token, uid: user._id });
