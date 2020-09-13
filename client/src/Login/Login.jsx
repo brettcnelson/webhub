@@ -1,46 +1,51 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { displayNone, authed } from '../redux/actions';
+import { authed, hideModal, showModal } from '../redux/actions';
 import './Login.scss';
+import swal from 'sweetalert';
 
-const Login =  ({ displayNone, authed }) => {
-  const [ loginhandle, setLoginhandle ] = useState('');
-  const [ loginPassword, setLoginPassword ] = useState('');
-  const login = ( handle, password ) => {
-    fetch('/api/users/login', {
+const Login =  ({ authed, hideModal, showModal }) => {
+  const [ email, setEmail ] = useState('');
+  const [ loginLink, setLoginLink ] = useState('');
+  const login = () => {
+    fetch('/api/users/login-request', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ handle, password })
+      body: JSON.stringify({ email })
     })
     .then(res => res.json())
     .then(res => {
-      if (res.token) {
-        localStorage.setItem('token', res.token);
-        displayNone();
-        authed(res);
+      if (res.msg) {
+        swal(res.msg);
       }
       else {
-        alert(res.msg);
-      } 
+        localStorage.setItem('tempToken',res.token);
+        setLoginLink(res.link);
+        swal({
+          text: `A ${res.register ? 'registration' : 'login'} link has been emailed to ${res.email}`,
+          icon: 'success'
+        })
+      }
     })
-    .catch(err => console.err(err));
+    .catch(err => console.error(err));
   }
-  return (
+  return loginLink ? 
+    (<div><a href={loginLink}>{loginLink}</a></div>) :
+    (
       <div>
-        <div>login</div>
-        <input type="text" placeholder="handle" autoFocus={true} value={loginhandle} onChange={(e) => setLoginhandle(e.target.value)} />
-        <input type="text" placeholder="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
-        {loginhandle && loginPassword ?
-          (<button onClick={() => login(loginhandle,loginPassword)}>login</button>) :
+        <div>login or register</div>
+        <input type="text" placeholder="enter email" autoFocus={true} value={email} onChange={(e) => setEmail(e.target.value)} />
+        {email ?
+          (<button onClick={() => login()}>OK</button>) :
           null
         }
       </div>
-  );
+    );
 }
 
 export default connect(
   null,
-  { displayNone, authed }
+  { hideModal, showModal }
 )(Login);

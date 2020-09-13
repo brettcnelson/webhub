@@ -1,25 +1,38 @@
 import React from 'react';
 import './Cover.scss';
 import { connect } from 'react-redux';
+import { hideModal  } from '../redux/actions';
 import Login from '../Login/Login.jsx';
-import Register from '../Register/Register.jsx';
-import { displayNone  } from '../redux/actions';
 
-const Cover =  ({ displayCover, displayNone }) => {
-  if (!displayCover) {
+const Cover =  ({ modal, hideModal }) => {
+  if (!modal) {
     return null;
   }
   return (
     <div className="cover">
       <div className="blackDisplay">
-        { displayCover === 'LOGIN' ? <Login /> : <Register /> }
-        <button className="closeDisplay" onClick={displayNone}>close</button>
+        <button className="closeDisplay" onClick={hideModal}>close</button>
+        { displayModal() }
       </div>
     </div>
   );
+  function displayModal() {
+    switch(modal) {
+      case('LOGIN'): {
+        return <Login />;
+      }
+      case('REGISTER'): {
+        // return <Register />;
+        return null;
+      }
+      default: {
+        return null;
+      }
+    }
+  }
 }
 
 export default connect(
-  ({ displayCover }) => ({ displayCover }),
-  { displayNone }
+  ({ modal }) => ({ modal }),
+  { hideModal }
 )(Cover);

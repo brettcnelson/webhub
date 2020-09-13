@@ -5,37 +5,13 @@ const UsersSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
+	email: {
+		type: String,
+		required :true
+	},
 	handle: {
 		type: String,
 		required: true
-	},
-	password: {
-		type: String,
-		required: true
-	},
-	profile: {
-		type: Map,
-		default: {}
-	},
-	subs: {
-		type: Map,
-		default: {}
-	},
-	alertSubs: {
-		type: Map,
-		default: {}
-	},
-	lastPostDate: {
-		type:Date,
-		default:null
-	},
-	recPoints: {
-		type:Number,
-		default:400
-	},
-	lastRecDate: {
-		type:Date,
-		default:null
 	}
 });
 

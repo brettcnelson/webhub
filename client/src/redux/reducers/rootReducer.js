@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import user from './user';
-import displayCover from './displayCover';
+import modal from './modal';
 
 export default combineReducers({ 
-  displayCover,
+  modal,
   user
 });

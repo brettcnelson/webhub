@@ -1,18 +1,14 @@
 import { 
-  REGISTER,
-  LOGIN,
-  NONE
+  SHOW_MODAL,
+  HIDE_MODAL
 } from '../actionTypes';
 
 export default (state=false,action) => {
   switch(action.type) {
-    case REGISTER: {
-      return 'REGISTER';
+    case SHOW_MODAL: {
+      return action.component;
     }
-    case LOGIN: {
-      return 'LOGIN';
-    }
-    case NONE: {
+    case HIDE_MODAL: {
       return false;
     }
     default:

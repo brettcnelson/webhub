@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import Login from '../Login/Login.jsx';
-import Register from '../Register/Register.jsx';
 import './Home.scss';
 
-const Home = ({ userData, isAuthed }) => {
+const Home = ({ uid, isAuthed }) => {
   if (!isAuthed) {
     return ( 
       <div>
-        <Register />
         <Login />
       </div>
     );
   }
   return (
     <div>
-      {userData.handle}
-      {userData._id}
+      { uid }
     </div>
   );
 }
 
 export default connect(
-  ({ user: { userData }, user: { isAuthed } }) => ({ userData, isAuthed })
+  ({ user: { uid, isAuthed } }) => ({ uid, isAuthed })
 )(Home);

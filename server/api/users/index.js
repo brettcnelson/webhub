@@ -4,72 +4,117 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../auth/auth');
 const User = require('../../models/Users');
+const Login = require('../../models/Logins');
 
 const router = express.Router();
 
-router.post('/login', (req,res) => {
-  const { handle, password } = req.body;
-  if (!handle || !password) {
-    return res.status(400).json({msg:'handle and password required for login'});
+router.post('/login-request', (req,res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({msg:'no email in login request'});
   }
-  User.findOne({ handle }, (err, user) => {
-    if (!user) {
-      return res.status(400).json({msg:'no user with that handle in db'});
+  User.findOne({ email }, (err, user) => {
+    if (err) {
+      return res.status(400).json({msg:'login email lookup error'});
     }
-    bcrypt.compare(password, user.password)
-    .then(isMatch => {
-      if (!isMatch) {
-        return res.status(400).json({msg:'invalid password'})
+    Login.create({}, (err,login) => {
+      if (err) {
+        return res.status(400).json({msg:'error creating login entry'});
       }
-      jwt.sign(
-        {id: user._id},
-        process.env.JWT_SECRET,
-        (err,token) => {
-          if (err) {
-            throw err;
-          }
-          res.json({ ...user._doc , token });
-        }
+      const link = `/${user ? 'login' : 'register'}/${login._id}`;
+      // TD: email the link and remove it from the responses below
+      const token = jwt.sign(
+        {
+          id: login._id,
+          email
+        },
+        process.env.JWT_SECRET
       );
+      return user ? 
+        res.status(200).json({ token, email, link }) : 
+        res.status(200).json({ register: true, token, email, link });
+    });
+  });
+});
+
+router.post('/login', (req,res) => {
+  let token = req.header('Authorization');
+  if (!token) {
+    return res.status(401).json({ msg: 'no token at server login auth check'});
+  }
+  const { id, email } = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
+  Login.findById(id, (err,link) => {
+    if (err) {
+      return res.status(400).json({ msg: 'error fetching login link' });
+    }
+    if (!link || id != link._id) {
+      return res.status(401).json({ msg: 'invalid login link' });
+    }
+    User.findOne({ email }, (err,user) => {
+      if (err) {
+        throw err;
+      }
+      if (!user) {
+        return res.status(400).json({ msg: 'this email doesn\'t have an account' });
+      }
+      const token = jwt.sign(
+        {
+          id: user._id
+        },
+        process.env.JWT_SECRET
+      );
+      res.status(200).json({ token, uid: user._id });
     });
   });
 });
 
 router.post('/register', (req,res) => {
-  const { handle, password } = req.body;
-  if (!handle || !password) {
-    return res.status(400).json({msg:'handle and password required for registration'});
+  let token = req.header('Authorization');
+  const handle = req.body.handle;
+  if (!token) {
+    return res.status(401).json({ msg: 'no token at server register auth check'});
   }
-  User.findOne({ handle }, (err, user) => {
-    if (err) {
-      throw err;
-    }
-    if (user) {
-      return res.status(400).json({msg:'user account with that handle already exists'});
-    }
-    bcrypt.genSalt(10, (err,salt) => {
-      bcrypt.hash(password, salt, (err,hash) => {
+  try {
+    const { id, email } = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
+    Login.findById(id, (err,link) => {
+      if (err) {
+        return res.status(400).json({ msg: 'error fetching registration link' });
+      }
+      if (!link || id != link._id) {
+        return res.status(200).json({ msg: 'invalid registration link' });
+      }
+      User.findOne({ email }, (err,user) => {
         if (err) {
           throw err;
         }
-        User.create({ handle , password: hash }, (err,user) => {
+        if (user) {
+          return res.status(401).json({ msg: 'this email already has an account' });
+        }
+        User.findOne({ handle }, (err,user) => {
           if (err) {
             throw err;
           }
-          jwt.sign(
-            {id: user._id},
-            process.env.JWT_SECRET,
-            (err,token) => {
-              if (err) {
-                throw err;
-              }
-              return res.status(200).json({ ...user._doc, token });
+          if (user) {
+            return res.status(401).json({ msg: 'this handle is no longer available' });
+          }
+          User.create({ email, handle }, (err,user) => {
+            if (err) {
+              throw err;
             }
-          );
+            const token = jwt.sign(
+              {
+                id: user._id
+              },
+              process.env.JWT_SECRET
+              );
+              res.status(200).json({ token, uid: user._id });
+            });
+          });
         });
       });
-    });
-  });
+  } catch(e) {
+    return res.status(400).json({ msg: 'invalid token at /login' });
+  }
 });
 
 router.get('/auth', auth, (req, res) => {
@@ -77,7 +122,10 @@ router.get('/auth', auth, (req, res) => {
     if (err) {
       throw err;
     }
-    return res.status(200).json({ ...user._doc });
+    if (!user) {
+      return res.status(200).json({ msg: 'user doesn\'t exist' });
+    }
+    return res.status(200).json({ uid: req.user.id });
   });
 });
 

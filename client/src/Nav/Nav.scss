@@ -1,9 +1,12 @@
 .Nav {
 	display:grid;
-	grid-template-columns:repeat(auto-fit,minmax(1px,1fr));
+	width:100%;
+	grid-template-columns:repeat(3,minmax(1px,1fr));
 	border-bottom:3px solid black;
 	// padding:2rem 1rem;
-	grid-template-rows: 50px;
+	grid-auto-rows: 50px;
+	position:fixed;
+	background:white;
 	.nav-link {
 		color:black;
 		display:flex;

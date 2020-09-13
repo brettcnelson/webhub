@@ -1,10 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Nav.scss';
+import Cover from '../Cover/Cover.jsx';
 import { connect } from 'react-redux';
-import { displayRegister, displayLogin, flushUser, notAuthed } from '../redux/actions';
+import { flushUser, notAuthed, showModal } from '../redux/actions';
 
-const Nav = ({ isAuthed, displayLogin, displayRegister, notAuthed, flushUser }) => {
+const Nav = ({ modal, isAuthed, notAuthed, flushUser, showModal }) => {
 	const logout = () => {
 		localStorage.removeItem('token');
 		flushUser();
@@ -33,20 +34,22 @@ const Nav = ({ isAuthed, displayLogin, displayRegister, notAuthed, flushUser }) 
 			<nav className="Nav">
 				<NavLink exact to='/' className="nav-link" activeClassName="active-nav-link">Home</NavLink>
 				<NavLink to='/search' className="nav-link" activeClassName="active-nav-link">Search</NavLink>
-				<div className="nav-link"><img onClick={copyLink} className="navBtn" src={`${process.env.PUBLIC_URL}/link.png`} alt="copy link"/></div>
-				<div className="nav-link"><button>new post</button></div>
 				<div className="nav-link">
 					{isAuthed ?
 						(<button onClick={logout}>logout</button>) :
-						(<><button onClick={displayLogin}>login</button><button onClick={displayRegister}>register</button></>)
+						(<button onClick={() => showModal('LOGIN')}>login</button>)
 					}
 				</div>
+				<div className="nav-link"><button>new post</button></div>
+				<div className="nav-link"><img onClick={copyLink} className="navBtn" src={`${process.env.PUBLIC_URL}/link.png`} alt="copy link"/></div>
+				<div className="nav-link">clipboard</div>
 			</nav>
+			<Cover modal={modal} />
 		</header>
 	);
 }
 
 export default connect(
-	({ user: { isAuthed } }) => ({ isAuthed }),
-	{ flushUser, displayLogin, displayRegister, notAuthed }
+	({ user: { isAuthed }, modal }) => ({ isAuthed, modal }),
+	{ flushUser, notAuthed, showModal }
 )(Nav);
