@@ -14,14 +14,12 @@ function auth(req, res, next) {
       if (err) {
         throw err;
       }
-      if (user) {
-        req.user = user;
-        next();
-      }
-      else {
+      if (!user) {
         return res.status(401).json({ msg: 'no user in db from token at auth check' });
       }
-    })
+      req.user = user;
+      next();
+    });
   });
 }
 

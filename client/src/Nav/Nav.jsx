@@ -16,7 +16,7 @@ const Nav = ({ modal, isAuthed, notAuthed, flushUser, showModal }) => {
 		return (regexp.test(str));
 	}
 
-	const copyLink = () => {
+	const searchLink = () => {
 		navigator.clipboard.readText()
 		.then(text => {
 			if (is_url(text)) {
@@ -27,6 +27,10 @@ const Nav = ({ modal, isAuthed, notAuthed, flushUser, showModal }) => {
 				alert('invalid url: '+text);
 			}
 		})
+	}
+
+	const newPost = () => {
+		isAuthed === true ? showModal('POST') : showModal('LOGIN');
 	}
 
 	return (
@@ -40,8 +44,8 @@ const Nav = ({ modal, isAuthed, notAuthed, flushUser, showModal }) => {
 						(<button onClick={() => showModal('LOGIN')}>login</button>)
 					}
 				</div>
-				<div className="nav-link"><button>new post</button></div>
-				<div className="nav-link"><img onClick={copyLink} className="navBtn" src={`${process.env.PUBLIC_URL}/link.png`} alt="copy link"/></div>
+				<div className="nav-link"><button onClick={newPost}>new post</button></div>
+				<div className="nav-link"><img onClick={searchLink} className="navBtn" src={`${process.env.PUBLIC_URL}/link.png`} alt="paste link"/></div>
 				<div className="nav-link">clipboard</div>
 			</nav>
 			<Cover modal={modal} />

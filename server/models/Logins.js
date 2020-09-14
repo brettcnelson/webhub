@@ -4,7 +4,7 @@ const LoginsSchema = new mongoose.Schema({
 	date: {
 		type: Date,
     default: Date.now,
-    index: { expires: '1m' }
+    expires: 180
 	}
 });
 

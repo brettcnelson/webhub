@@ -6,7 +6,7 @@ import {
 export default (state=false,action) => {
   switch(action.type) {
     case SHOW_MODAL: {
-      return action.component;
+      return { component: action.component, props: action.props };
     }
     case HIDE_MODAL: {
       return false;

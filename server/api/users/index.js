@@ -1,6 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../auth/auth');
 const User = require('../../models/Users');
@@ -21,7 +19,7 @@ router.post('/login-request', (req,res) => {
       if (err) {
         return res.status(400).json({msg:'error creating login entry'});
       }
-      const link = `/${user ? 'login' : 'register'}/${login._id}`;
+      const link = `${user ? 'login' : 'register'}/${login._id}`;
       // TD: email the link and remove it from the responses below
       const token = jwt.sign(
         { id: login._id, email },
@@ -34,14 +32,17 @@ router.post('/login-request', (req,res) => {
   });
 });
 
-router.post('/login', (req,res) => {
-  let token = req.header('Authorization');
-  if (!token) {
+router.post('/login/:id', (req,res) => {
+  let token = req.header('Authorization').split(' ')[1];
+  if (!token || token === 'null') {
     return res.status(401).json({ msg: 'no token at server login auth check'});
   }
-  jwt.verify(token.split(' ')[1], process.env.JWT_SECRET, (err, { id, email }) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, { id, email }) => {
     if (err) {
-      return res.status(400).json({ msg: 'invalid token at login' });
+      return res.status(401).json({ msg: 'invalid token at login' });
+    }
+    if (req.params.id !== id) {
+      return res.status(401).json({ msg: 'link does not match token' });
     }
     Login.findById(id, (err,link) => {
       if (err) {
@@ -67,14 +68,19 @@ router.post('/login', (req,res) => {
   });
 });
 
-router.post('/register', (req,res) => {
-  let token = req.header('Authorization');
+router.post('/register/:id', (req,res) => {
+  let token = req.header('Authorization').split(' ')[1];
   const handle = req.body.handle;
-  if (!token) {
+  if (!token || token === 'null') {
     return res.status(401).json({ msg: 'no token at server register auth check'});
   }
-  try {
-    const { id, email } = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
+  jwt.verify(token, process.env.JWT_SECRET, (err, { id, email }) => {
+    if (err) {
+      return res.status(400).json({ msg: 'invalid token at /login' });
+    }
+    if (req.params.id !== id) {
+      return res.status(401).json({ msg: 'link does not match token' });
+    }
     Login.findById(id, (err,link) => {
       if (err) {
         return res.status(400).json({ msg: 'error fetching registration link' });
@@ -98,20 +104,18 @@ router.post('/register', (req,res) => {
           }
           User.create({ email, handle }, (err,user) => {
             if (err) {
-              throw err;
+              return res.status(401).json({ msg: 'err creating user, dup key' });
             }
             const token = jwt.sign(
               { id: user._id },
               process.env.JWT_SECRET
-              );
-              res.status(200).json({ token, uid: user._id });
-            });
+            );
+            res.status(200).json({ token, uid: user._id });
           });
         });
       });
-  } catch(e) {
-    return res.status(400).json({ msg: 'invalid token at /login' });
-  }
+    });
+  });
 });
 
 router.get('/auth', auth, (req, res) => {

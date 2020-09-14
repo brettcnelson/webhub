@@ -36,7 +36,7 @@ const Login =  ({ authed, hideModal, showModal }) => {
     (
       <div>
         <div>login or register</div>
-        <input type="text" placeholder="enter email" autoFocus={true} value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="email" placeholder="enter email" autoFocus={true} value={email} onChange={(e) => setEmail(e.target.value)} />
         {email ?
           (<button onClick={() => login()}>OK</button>) :
           null

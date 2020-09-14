@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { authed } from '../redux/actions';
 import swal from 'sweetalert';
@@ -8,9 +9,13 @@ import PickHandle from '../PickHandle/PickHandle.jsx';
 
 const Register =  ({ authed }) => {
   const [ redirect, setRedirect ] = useState(false);
+  const { id } = useParams();
+  const token = localStorage.getItem('tempToken');
   const register = ( handle ) => {
-    const token = localStorage.getItem('tempToken');
-    fetch('/api/users/register', {
+    if (!token) {
+      swal('','you need a token','error');
+    }
+    fetch(`/api/users/register/${id}`, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -21,10 +26,10 @@ const Register =  ({ authed }) => {
     .then(res => res.json())
     .then(res => {
       if (res.token) {
-        localStorage.setItem('token', res.token);
         localStorage.removeItem('tempToken');
-        authed({ uid: res.uid });
+        localStorage.setItem('token', res.token);
         setRedirect(true);
+        authed({ uid: res.uid });
       }
       else {
         swal('Error',res.msg,'error')
@@ -35,7 +40,7 @@ const Register =  ({ authed }) => {
     })
     .catch(err => console.error(err));
   }
-  return redirect ?
+  return redirect || !token ?
     <Redirect to='/' /> :
     <PickHandle onClick={(handle) => register(handle)} />;
   }

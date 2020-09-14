@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { authed } from '../redux/actions';
 import swal from 'sweetalert';
 
 const HandleLogin =  ({ authed }) => {
   const [ redirect, setRedirect ] = useState(false);
+  const { id } = useParams();
   useEffect(() => {
     login();
   },[]);
@@ -15,7 +17,13 @@ const HandleLogin =  ({ authed }) => {
   
   function login() {
     const token = localStorage.getItem('tempToken');
-    fetch('/api/users/login', {
+    if (!token) {
+      swal('','you need a token','error')
+      .then(val => {
+        setRedirect(true);
+      });
+    }
+    fetch(`/api/users/login/${id}`, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token
@@ -24,10 +32,10 @@ const HandleLogin =  ({ authed }) => {
     .then(res => res.json())
     .then(res => {
       if (res.token) {
-        localStorage.setItem('token', res.token);
         localStorage.removeItem('tempToken');
-        authed({ uid: res.uid });
+        localStorage.setItem('token', res.token);
         setRedirect(true);
+        authed({ uid: res.uid });
       }
       else {
         swal('Error',res.msg,'error')

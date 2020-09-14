@@ -3,6 +3,7 @@ import './Cover.scss';
 import { connect } from 'react-redux';
 import { hideModal  } from '../redux/actions';
 import Login from '../Login/Login.jsx';
+import Post from '../Post/Post.jsx';
 
 const Cover =  ({ modal, hideModal }) => {
   if (!modal) {
@@ -17,13 +18,12 @@ const Cover =  ({ modal, hideModal }) => {
     </div>
   );
   function displayModal() {
-    switch(modal) {
+    switch(modal.component) {
       case('LOGIN'): {
         return <Login />;
       }
-      case('REGISTER'): {
-        // return <Register />;
-        return null;
+      case('POST'): {
+        return <Post {...modal.props} />
       }
       default: {
         return null;

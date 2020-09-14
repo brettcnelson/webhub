@@ -12,7 +12,7 @@ export const updateUserData = (data) => ({ type:UPDATE_USER_DATA, data });
 
 export const notAuthed = () => ({type:IS_NOT_AUTHED});
 export const flushUser = () => ({type:FLUSH_USER});
-export const showModal = (component) => ({type:SHOW_MODAL, component });
+export const showModal = (component, props) => ({type:SHOW_MODAL, component, props });
 export const hideModal = () => ({type:HIDE_MODAL});
 
 // export const getUsers = (users) => ({type:GET_USERS, users});
